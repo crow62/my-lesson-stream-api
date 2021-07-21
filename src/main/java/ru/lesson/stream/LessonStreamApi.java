@@ -20,7 +20,10 @@ public class LessonStreamApi {
      * Важно: Необходимо учесть, что List<Employee> employees может содержать дублирующие записи.
      */
     public List<Employee> task1(List<Employee> employees) {
-        return null;
+        return employees.stream().
+                filter(p -> p.getRating() > 50)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     /**
@@ -29,15 +32,22 @@ public class LessonStreamApi {
      * у которых рейтинг {@link Employee#getRating()} меньше 50.
      */
     public List<String> task2(List<Employee> employees) {
-        return null;
+        return employees.stream().
+                filter(p -> p.getRating() < 50)
+                .distinct()
+                .map(p -> p.getName() + "=" + p.getRating())
+                .collect(Collectors.toList());
     }
+
 
     /**
      * Задача №3.
      * Получить средний райтинг всех сотрудников.
      */
     public double task3(List<Employee> employees) {
-        return 0;
+        return employees.stream()
+                .mapToInt(p -> p.getRating())
+                .average().orElse(0);
     }
 
     /**
@@ -50,31 +60,39 @@ public class LessonStreamApi {
      * @return список сотрудников
      */
     public List<Employee> task4(List<List<Employee>> employeeDepartments) {
-        return null;
+        return employeeDepartments.stream()
+                .flatMap(p -> p.stream())
+                .distinct()
+                .sorted(Comparator.comparingInt(Employee::getRating).reversed())
+                .collect(Collectors.toList());
     }
+
 
     /**
      * Задача №5.
      * Предположим, что требуется выводить список сотрудников на веб-страницу.
      * Необходимо реализовать постраничный вывод (пагинцию).
-     *
+     * <p>
      * Пример:
      * Если number = 1, size = 3, то результат список List<Employee>
      * Employee{id=1, name='Name1', rating=11}, Employee{id=2, name='Name2', rating=12}, Employee{id=3, name='Name3', rating=13}
-     *
+     * <p>
      * Если number = 2, size = 3, то результат список List<Employee>
      * Employee{id=4, name='Name4', rating=14}, Employee{id=5, name='Name5', rating=15}, Employee{id=6, name='Name6', rating=16}
      *
      * @param employees список сотрудников
-     * @param number номер страницы (значение от 1)
-     * @param size размер выборки
+     * @param number    номер страницы (значение от 1)
+     * @param size      размер выборки
      * @return список сотрудников
      */
     public List<Employee> task5(List<Employee> employees, int number, int size) {
         if (number <= 0) {
             throw new IllegalArgumentException(Integer.toString(number));
         }
-        return null;
+        return employees.stream()
+                .skip(number * 3 - 3)
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -86,7 +104,9 @@ public class LessonStreamApi {
      * @return имена сотрудников в String
      */
     public String task6(List<Employee> employees) {
-        return null;
+        return employees.stream()
+                .map(p -> p.getName())
+                .collect(Collectors.joining(", ", "[", "]"));
     }
 
     /**
@@ -97,7 +117,10 @@ public class LessonStreamApi {
      * @return если дубли существуют, то true, иначе false
      */
     public boolean task7(List<Employee> employees) {
-        return false;
+        return employees.stream()
+                .map(Employee::getName)
+                .distinct()
+                .count() != employees.size();
     }
 
     /**
@@ -108,7 +131,9 @@ public class LessonStreamApi {
      * @return словарь должность и райтинг
      */
     public Map<PositionType, Double> task8(List<Employee> employees) {
-        return null;
+        return employees.stream()
+                .collect(Collectors.groupingBy(Employee::getPositionType,
+                        Collectors.averagingDouble(p -> p.getRating())));
     }
 
     /**
@@ -122,7 +147,9 @@ public class LessonStreamApi {
      * @return словарь с количеством эффективных и неэффективных сотрудников
      */
     public Map<Boolean, Long> task9(List<Employee> employees) {
-        return null;
+        return employees.stream()
+                .collect(Collectors.partitioningBy(p -> p.getRating() > 50,
+                        Collectors.counting()));
     }
 
     /**
@@ -136,7 +163,9 @@ public class LessonStreamApi {
      * @return словарь с списком имен {@link Employee#getName()} через ", " эффективных и неэффективных сотрудников
      */
     public Map<Boolean, String> task10(List<Employee> employees) {
-        return null;
+        return employees.stream()
+                .collect(Collectors.partitioningBy(p ->p.getRating()>50,
+                        Collectors.mapping(p -> p.getName(),Collectors.joining(", "))));
     }
 
 }
