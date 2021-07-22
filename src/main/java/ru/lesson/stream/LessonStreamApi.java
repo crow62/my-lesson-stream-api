@@ -20,8 +20,8 @@ public class LessonStreamApi {
      * Важно: Необходимо учесть, что List<Employee> employees может содержать дублирующие записи.
      */
     public List<Employee> task1(List<Employee> employees) {
-        return employees.stream().
-                filter(p -> p.getRating() > 50)
+        return employees.stream()
+                .filter(p -> p.getRating() > 50)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -32,8 +32,8 @@ public class LessonStreamApi {
      * у которых рейтинг {@link Employee#getRating()} меньше 50.
      */
     public List<String> task2(List<Employee> employees) {
-        return employees.stream().
-                filter(p -> p.getRating() < 50)
+        return employees.stream()
+                .filter(p -> p.getRating() < 50)
                 .distinct()
                 .map(p -> p.getName() + "=" + p.getRating())
                 .collect(Collectors.toList());
