@@ -90,7 +90,7 @@ public class LessonStreamApi {
             throw new IllegalArgumentException(Integer.toString(number));
         }
         return employees.stream()
-                .skip(number * 3 - 3)
+                .skip((long) size * (number - 1))
                 .limit(size)
                 .collect(Collectors.toList());
     }
